@@ -2,27 +2,31 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Ajouter un utilisateur
-router.post('/', async (req, res) => {
-  const { nom, email, password, role } = req.body;
-  try {
-    const [result] = await pool.query(
-      `INSERT INTO utilisateurs (nom, email, password, role)
-       VALUES (?, ?, ?, ?)`,
-      [nom, email, password, role || 'agent']
-    );
-    res.json({ id: result.insertId, message: 'Utilisateur ajouté' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-});
+// Middleware simple pour simuler l'utilisateur connecté
+// Dans une vraie app, on utiliserait JWT ou sessions
+function authMiddleware(req, res, next) {
+  // Exemple : on passe l'userId et role dans l'en-tête pour test
+  req.user = {
+    id: req.headers['x-user-id'] || 0,
+    role: req.headers['x-user-role'] || 'agent'
+  };
+  next();
+}
 
-// Lister tous les utilisateurs
+router.use(authMiddleware);
+
+// GET /api/utilisateurs
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query(`SELECT * FROM utilisateurs ORDER BY id DESC`);
-    res.json(rows);
+    if (req.user.role === 'admin') {
+      // admin voit tous les utilisateurs
+      const [rows] = await pool.query('SELECT id, nom, email, role FROM utilisateurs');
+      res.json(rows);
+    } else {
+      // agent ne voit que lui-même
+      const [rows] = await pool.query('SELECT id, nom, email, role FROM utilisateurs WHERE id = ?', [req.user.id]);
+      res.json(rows);
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur serveur' });
