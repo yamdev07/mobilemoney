@@ -5,6 +5,23 @@ const pool = require('../db');
 // Ajouter une transaction
 router.post('/', async (req, res) => {
   const { nom_client, numero, type, operateur_id, montant, created_by } = req.body;
+
+  // ✅ Validation basique des champs
+  if (!nom_client || !numero || !type || !operateur_id || !montant || !created_by) {
+    return res.status(400).json({ error: 'Tous les champs sont obligatoires' });
+  }
+
+  // ✅ Vérifier que numero et montant ne contiennent que des chiffres
+  const isNumeric = /^\d+$/; // expression régulière : uniquement des chiffres
+
+  if (!isNumeric.test(numero)) {
+    return res.status(400).json({ error: 'Le numéro doit contenir uniquement des chiffres' });
+  }
+
+  if (!isNumeric.test(montant)) {
+    return res.status(400).json({ error: 'Le montant doit contenir uniquement des chiffres' });
+  }
+
   try {
     const [result] = await pool.query(
       `INSERT INTO transactions (nom_client, numero, type, operateur_id, montant, created_by)
@@ -17,22 +34,3 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });
-
-// Lister toutes les transactions
-router.get('/', async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      `SELECT t.*, o.nom AS operateur_nom, u.nom AS agent_nom
-       FROM transactions t
-       LEFT JOIN operateurs o ON t.operateur_id = o.id
-       LEFT JOIN utilisateurs u ON t.created_by = u.id
-       ORDER BY t.date_transaction DESC`
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-});
-
-module.exports = router;
