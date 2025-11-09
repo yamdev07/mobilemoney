@@ -1,26 +1,20 @@
 const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 5000;
+
+// Body parser
 app.use(express.json());
 
-// Route racine pour tester le serveur
+// Route racine
 app.get('/', (req, res) => {
-  res.send('API Mobile Money fonctionne ✅');
+  res.send('Backend MobileMoney fonctionne ✅');
 });
 
-// Import des routes
-const transactionsRoutes = require('./routes/transactions');
-const utilisateursRoutes = require('./routes/utilisateurs');
-const operateursRoutes = require('./routes/operateurs');
+// Exemple : tes routes existantes
+const transactionsRouter = require('./routes/transactions');
+app.use('/api/transactions', transactionsRouter);
 
-app.use('/api/transactions', transactionsRoutes);
-app.use('/api/utilisateurs', utilisateursRoutes);
-app.use('/api/operateurs', operateursRoutes);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Serveur lancé sur le port ${PORT}`));
+// Démarrage serveur
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
+});

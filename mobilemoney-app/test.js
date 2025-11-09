@@ -1,12 +1,16 @@
-const pool = require('./db');
+const db = require('./firebase');
 
-async function testConnexion() {
+async function test() {
   try {
-    const [rows] = await pool.query('SELECT NOW() AS now');
-    console.log('Connexion MySQL OK :', rows[0].now);
+    const docRef = db.collection('test').doc('demo');
+    await docRef.set({
+      message: 'Test Firebase',
+      date: new Date()
+    });
+    console.log('Test réussi ✅');
   } catch (err) {
-    console.error('Erreur de connexion :', err);
+    console.error('Erreur Firebase :', err);
   }
 }
 
-testConnexion();
+test();
