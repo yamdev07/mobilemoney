@@ -1,0 +1,8 @@
+# Node modules
+node_modules/
+
+# Service Account JSON
+backend/serviceAccountKey.json
+
+# Environnement local
+.env
