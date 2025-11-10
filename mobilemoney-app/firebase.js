@@ -1,5 +1,5 @@
-require('dotenv').config();
 const admin = require('firebase-admin');
+require('dotenv').config();
 
 const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
 
@@ -8,5 +8,5 @@ admin.initializeApp({
   databaseURL: process.env.DATABASE_URL
 });
 
-const db = admin.firestore(); // ou admin.database() si tu utilises Realtime DB
+const db = admin.database();
 module.exports = db;

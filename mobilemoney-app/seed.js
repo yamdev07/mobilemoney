@@ -53,4 +53,3 @@ async function seedDatabase() {
 }
 
 seedDatabase();
-m

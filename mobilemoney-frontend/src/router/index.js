@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Operateurs from '../views/MmOperateurs.vue';
-import Utilisateurs from '../views/MmUtilisateurs.vue';
-import Transactions from '../views/MmTransactions.vue';
+import Home from '@/views/Home.vue';
+import Operateurs from '@/views/Operateurs.vue';
+import Transactions from '@/views/Transactions.vue';
+import Utilisateurs from '@/views/Utilisateurs.vue';
 
 const routes = [
-  { path: '/', redirect: '/operateurs' },
-  { path: '/operateurs', component: Operateurs },
-  { path: '/utilisateurs', component: Utilisateurs },
-  { path: '/transactions', component: Transactions },
+  { path: '/', name: 'Home', component: Home },
+  { path: '/operateurs', name: 'Operateurs', component: Operateurs },
+  { path: '/transactions', name: 'Transactions', component: Transactions },
+  { path: '/utilisateurs', name: 'Utilisateurs', component: Utilisateurs },
 ];
 
 const router = createRouter({

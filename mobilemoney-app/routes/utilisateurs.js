@@ -1,36 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../firebase'); // notre config Firebase
+const db = require('../firebase');
 
-// Middleware pour simuler l'utilisateur connecté
-function authMiddleware(req, res, next) {
-  req.user = {
-    id: req.headers['x-user-id'] || '0',
-    role: req.headers['x-user-role'] || 'agent'
-  };
-  next();
-}
-
-router.use(authMiddleware);
-
-// GET /api/utilisateurs
+// GET tous les utilisateurs
 router.get('/', async (req, res) => {
   try {
-    let usersRef = db.collection('utilisateurs');
-    let snapshot;
+    const snapshot = await db.ref('utilisateurs').once('value');
+    const data = snapshot.val() || {};
+    const utilisateurs = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+    res.json(utilisateurs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
 
-    if (req.user.role === 'admin') {
-      // admin voit tous les utilisateurs
-      snapshot = await usersRef.get();
-    } else {
-      // agent ne voit que lui-même
-      snapshot = await usersRef.where('id', '==', req.user.id).get();
-    }
+// POST nouvel utilisateur
+router.post('/', async (req, res) => {
+  try {
+    const { nom, email } = req.body;
+    if (!nom || !email) return res.status(400).json({ error: 'Nom et email requis' });
 
-    const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    res.json(users);
-  } catch (err) {
-    console.error(err);
+    const newRef = db.ref('utilisateurs').push();
+    await newRef.set({ nom, email });
+    res.status(201).json({ id: newRef.key, nom, email });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });

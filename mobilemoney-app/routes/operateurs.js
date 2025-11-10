@@ -1,29 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const db = require('../firebase');
 
-// Ajouter un opérateur
-router.post('/', async (req, res) => {
-  const { nom } = req.body;
+// GET tous les opérateurs
+router.get('/', async (req, res) => {
   try {
-    const [result] = await pool.query(
-      `INSERT INTO operateurs (nom) VALUES (?)`,
-      [nom]
-    );
-    res.json({ id: result.insertId, message: 'Opérateur ajouté' });
-  } catch (err) {
-    console.error(err);
+    const snapshot = await db.ref('operateurs').once('value');
+    const data = snapshot.val() || {};
+    const operateurs = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+    res.json(operateurs);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });
 
-// Lister tous les opérateurs
-router.get('/', async (req, res) => {
+// POST nouvel opérateur
+router.post('/', async (req, res) => {
   try {
-    const [rows] = await pool.query(`SELECT * FROM operateurs ORDER BY id DESC`);
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
+    const { nom } = req.body;
+    if (!nom) return res.status(400).json({ error: 'Nom requis' });
+
+    const newRef = db.ref('operateurs').push();
+    await newRef.set({ nom });
+    res.status(201).json({ id: newRef.key, nom });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });
