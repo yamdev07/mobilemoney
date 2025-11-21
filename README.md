@@ -36,77 +36,93 @@ Ouvrez un terminal et exécutez :
 ````bash
 cd mobilemoney-app
 npm install
+````
 ---
 
-2. Configuration
+## 2. Configuration
 
 Créer un fichier .env à la racine du backend avec les infos MySQL :
-
+````
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=ton_mdp
 DB_NAME=mobilemoney
 DB_PORT=3306
 PORT=5000
-
-3. Lancer le serveur
+````
+---
+# 3. Lancer le serveur
+````
 npm run dev
+````
 
+Le backend sera accessible sur:
+````
+http://localhost:5000
+````
+---
+# 4. Seeder la base de données (facultatif)
 
-Le backend sera accessible sur http://localhost:5000
-.
-
-4. Seeder la base de données (facultatif)
-
-Pour ajouter des données de test :
-
+-Pour ajouter des données de test :
+````
 node seed.js
+````
+-Frontend – mobilemoney-frontend
 
-Frontend – mobilemoney-frontend
-1. Installation
+# 1. Installation
+````
 cd mobilemoney-frontend
 npm install
-
-2. Lancer le frontend
+````
+# 2. Lancer le frontend
+````
 npm run serve
+````
 
+Le frontend sera accessible sur :
+````
+http://localhost:8080
+````
+---
+## 🚀 Fonctionnalités
 
-Le frontend sera accessible sur http://localhost:8080
-.
+- Gestion des opérateurs : Ajouter, lister
 
-🚀 Fonctionnalités
+- Gestion des utilisateurs : Ajouter, lister
 
-Gestion des opérateurs : Ajouter, lister
+- Gestion des transactions : Ajouter, lister
 
-Gestion des utilisateurs : Ajouter, lister
+- Navigation par pages séparées via Vue Router
 
-Gestion des transactions : Ajouter, lister
+- UI stylée avec Tailwind CSS
 
-Navigation par pages séparées via Vue Router
+- Backend avec Node.js + Express + MySQL
 
-UI stylée avec Tailwind CSS
+- API REST sécurisée avec CORS activé
+  
+---
+## ⚙️ Technologies utilisées
 
-Backend avec Node.js + Express + MySQL
+- Frontend : Vue 3, Vue Router, Tailwind CSS, Axios
 
-API REST sécurisée avec CORS activé
+- Backend : Node.js, Express, Firebase
 
-⚙️ Technologies utilisées
+- Outils : npm, Postman (optionnel)
 
-Frontend : Vue 3, Vue Router, Tailwind CSS, Axios
-
-Backend : Node.js, Express, MySQL
-
-Outils : npm, Postman (optionnel)
-
-📌 Notes
+---
+## 📌 Notes
 
 Assurez-vous que le backend tourne avant de lancer le frontend pour éviter les erreurs Network Error avec Axios.
 
 Pour personnaliser le style, modifiez le fichier index.css et les classes Tailwind dans vos composants.
-
-💻 Captures d’écran
+---
+## 💻 Captures d’écran
 
 Exemple pour ajouter vos captures :
 
 ![Opérateurs](./screenshots/operateurs.png)
 ![Transactions](./screenshots/transactions.png)
+---
+## Auteurs
+
+Yoann yamd
